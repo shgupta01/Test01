@@ -1,0 +1,137 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Demo",
+		"_postman_id": "c37aa3f8-6922-cbd6-ec66-d6a785351b05",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1 POST Q1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status code is 201\"] = responseCode.code === 201;"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "https://api.jms.customerappsstag.dowjones.io/commerce/api/destinations/djis-jms-stag-01-testQueue2/messages",
+				"method": "POST",
+				"header": [
+					{
+						"key": "content-type",
+						"value": "application/json;charset=UTF-8",
+						"description": ""
+					},
+					{
+						"key": "Request-Identifier",
+						"value": "{{$guid}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"data\": {\n    \"attributes\": {\n      \"base64EncodedMessageBody\": \"PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48bnMyOkNpdEVkaXRQcm9maWxlTWVzc2FnZSB4bWxuczpuczI9Imh0dHA6Ly9vbWMuZG93am9uZXMuY29tL3NjaGVtYS9tYXJrZXRwbGFjZS9jaXQvbWVzc2FnZXMvY2l0RWRpdFByb2ZpbGVNZXNzYWdlL3YxXzAiPjxzdWJzY3JpYmVyVVVJRD4xNTUwZmYzOC04MjQ0LTRmOTYtYjQ0Yi01MzU2MGRmNTUzMDI8L3N1YnNjcmliZXJVVUlEPjxlZGl0ZWRGaWVsZD5BYm91dCBNZTwvZWRpdGVkRmllbGQ+PC9uczI6Q2l0RWRpdFByb2ZpbGVNZXNzYWdlPg0K\"\n    },\n    \"type\": \"messages\"\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "2 GET Q1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status code is 200\"] = (responseCode.code === 200);",
+							"",
+							"if (responseCode.code == 200) {",
+							"    ",
+							"",
+							"    var jsonData = JSON.parse(responseBody);",
+							"    ",
+							"    //tests[\"Your test name\"] = (\"pass\");",
+							"    ",
+							"    postman.setGlobalVariable(\"ACK\", jsonData.data.attributes.acknowledgementHandlerId);",
+							"   ",
+							"    ",
+							"         ",
+							"    }",
+							"    ",
+							"",
+							"",
+							"",
+							"",
+							"",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "https://api.jms.customerappsstag.dowjones.io/commerce/api/destinations/djis-jms-stag-01-testQueue2/messages/next",
+				"method": "GET",
+				"header": [
+					{
+						"key": "content-type",
+						"value": "application/json;charset=UTF-8",
+						"description": ""
+					},
+					{
+						"key": "Request-Identifier",
+						"value": "{{$guid}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "3 ACK a message from Q1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status code is 204\"] = responseCode.code === 204;"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "https://api.jms.customerappsstag.dowjones.io/commerce/api/destinations/djis-jms-stag-01-testQueue2/messages/acknowledge\n",
+				"method": "POST",
+				"header": [
+					{
+						"key": "content-type",
+						"value": "application/json;charset=UTF-8",
+						"description": ""
+					},
+					{
+						"key": "Request-Identifier",
+						"value": "{{$guid}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"data\": {\n    \"attributes\": {\n      \"acknowledgementHandlerId\": \"{{ACK}}}\"\n    },\n    \"id\": \"{{$guid}}\",\n    \"type\": \"messages\"\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
